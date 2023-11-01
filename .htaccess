@@ -4,6 +4,5 @@ RewriteRule ^listings$ listings.php [L]
 RewriteRule ^register$ register.php [L]
 RewriteRule ^login$ login.php [L]
 RewriteRule ^logout$ logout.php [L]
-RewriteRule ^booking% booking.php [L]
-RewriteRule ^checkout% checkout.php [L]
-
+RewriteRule ^booking booking.php [L]
+RewriteRule ^checkout checkout.php [L]
