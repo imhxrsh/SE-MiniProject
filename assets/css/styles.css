@@ -32,7 +32,7 @@
 
 .listing img{
     object-fit: cover !important;
-    height: 30vh;
+    height: 45vh;
     width: 100%;
 }
 
@@ -48,4 +48,14 @@ input::-webkit-inner-spin-button {
 
 .link{
     text-decoration: none;
+}
+
+.listing-text .title{
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.listing-text .inner-text{
+    font-size: 1.2rem;
+    font-weight: 500;
 }

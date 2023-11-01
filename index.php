@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if (isset($_SESSION["user_id"])) {
+    $isLoggedIn = true;
+} else {
+    $isLoggedIn = false;
+}
+?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 
@@ -9,7 +18,7 @@
 </head>
 
 <body>
-    <?php include 'includes/navbar.html' ?>
+    <?php include 'includes/navbar.php' ?>
 
     <div class="hero">
         <div class="d-flex container justify-content-center align-items-center">

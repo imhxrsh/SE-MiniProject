@@ -13,15 +13,21 @@
                         <a class="nav-link" aria-current="page" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/#feautures">Feautures</a>
+                        <a class="nav-link" href="/#features">Features</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/listings">Hotels</a>
                     </li>
                 </ul>
                 <div class="d-lg-flex col-lg-3 justify-content-lg-end">
-                    <a href="/register"><button class="mx-2 btn btn-secondary">Register</button></a>
-                    <a href="/login"><button class="mx-2 btn btn-secondary">Login</button></a>    
+                    <?php
+                    if (isset($_SESSION["user_id"])) {
+                        echo '<a href="/logout"><button class="mx-2 btn btn-secondary">Logout</button></a>';
+                    } else {
+                        echo '<a href="/register"><button class="mx-2 btn btn-secondary">Register</button></a>';
+                        echo '<a href="/login"><button class="mx-2 btn btn-secondary">Login</button></a>';
+                    }
+                    ?>
                 </div>
             </div>
         </div>

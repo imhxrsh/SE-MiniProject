@@ -1,3 +1,6 @@
 RewriteEngine On
 
 RewriteRule ^listings$ listings.php [L]
+RewriteRule ^register$ register.php [L]
+RewriteRule ^login$ login.php [L]
+RewriteRule ^logout$ logout.php [L]
