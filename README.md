@@ -2,6 +2,8 @@
 
 Welcome to the Myriad project! This web application is built using PHP, HTML, CSS, Bootstrap, and MySQL to provide users with the ability to book hotel rooms on an hourly basis.
 
+## [Demo](https://myriad.hxrsh.me/)
+
 ## Table of Contents
 - [Features](#features)
 - [Prerequisites](#prerequisites)
