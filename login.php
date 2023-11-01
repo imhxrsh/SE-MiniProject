@@ -1,5 +1,6 @@
 <?php
 include 'conn.php';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
@@ -37,7 +38,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <?php include 'includes/navbar.php' ?>
-
+    <?php if (isset($_GET["error"])) {
+        if ($_GET["error"] == "notLoggedIn") {
+            echo '<div class="container col-5"><div class="alert alert-danger alert-dismissible fade show" role="alert">Please log in and then book again!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div></div>';
+        }
+    }
+    ?>
     <div class="register d-flex container justify-content-center align-items-center">
         <div class="d-flex row col-8 justify-content-center align-items-center">
             <h1 class="text-center">Login</h1>
@@ -60,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <?php include 'includes/footer.html' ?>
-    
+
     <?php include 'includes/js_include.html' ?>
 </body>
 

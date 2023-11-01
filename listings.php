@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+if (isset($_SESSION["user_id"])) {
+    $isLoggedIn = true;
+} else {
+    $isLoggedIn = false;
+}
 include 'conn.php';
 ?>
 
@@ -18,11 +25,11 @@ include 'conn.php';
     <div class="container">
         <div class="row justify-content-center my-5">
             <h5 class="col-lg-7 text-center">Hotel Listings</h5>
-            <input type="text" class="col form-control pe-lg-5 mx-lg-0 mx-5 me-lg-5" id="search" placeholder="Search" aria-label="Search" aria-describedby="search">
+            <input type="text" class="col form-control pe-lg-5 mx-lg-0 mx-5 me-lg-5" id="searchInput" placeholder="Search" aria-label="Search" aria-describedby="search">
         </div>
         <div class="d-flex container flex-column justify-content-center align-items-center">
             <?php
-            $select_hotels = mysqli_query($conn, "SELECT * FROM `hotels` ORDER BY `id` ASC") or die('query failed');
+            $select_hotels = mysqli_query($conn, "SELECT * FROM `hotels` ORDER BY `price` ASC") or die('query failed');
             if (mysqli_num_rows($select_hotels) > 0) {
                 while ($fetch_hotels = mysqli_fetch_assoc($select_hotels)) {
 
@@ -66,7 +73,7 @@ include 'conn.php';
                                     <p class="inner-text">Rating: <?php echo $fetch_hotels['rating'];?></p>
                                 </div>
                                 <div class="col d-flex justify-content-center align-items-center">
-                                    <button type="button" class="btn bg-gradient btn-secondary">Book Now</button>
+                                    <a href="/booking?id=<?php echo $fetch_hotels['id'];?>"><button type="button" class="btn bg-gradient btn-secondary">Book Now</button></a>
                                 </div>
                                 
                             </div>
@@ -84,6 +91,23 @@ include 'conn.php';
     <?php include 'includes/footer.html' ?>
 
     <?php include 'includes/js_include.html' ?>
+    <script>
+        const searchInput = document.getElementById("searchInput");
+        const cards = document.querySelectorAll(".row.listing.m-4");
+
+        searchInput.addEventListener("input", () => {
+            const searchTerm = searchInput.value.toLowerCase();
+
+            cards.forEach(card => {
+                const cardContent = card.textContent.toLowerCase();
+                if (cardContent.includes(searchTerm)) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

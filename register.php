@@ -14,13 +14,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("ssss", $name, $phone, $email, $hashedPassword);
 
     if ($stmt->execute()) {
-        header("Location: login.php");
+        header("Location: /login");
         exit;
     } else {
         $error_message = "Registration failed. Please try again.";
     }
 
-    // Close the database connection
     $stmt->close();
     $conn->close();
 }
