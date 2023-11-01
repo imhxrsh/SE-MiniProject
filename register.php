@@ -41,9 +41,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php include 'includes/navbar.php' ?>
 
     <div class="register d-flex container justify-content-center align-items-center">
-        <div class="d-flex row col-8 justify-content-center align-items-center">
+        <div class="d-flex row col-lg-8 col-12 justify-content-center align-items-center">
             <h1 class="text-center">Register</h1>
-            <div class="col-5">
+            <div class="col-lg-5 col-12">
                 <form action="" method="POST">
                     <div class="mb-3">
                         <label for="name" class="form-label">Full Name<span style="color: red;">*</span></label>

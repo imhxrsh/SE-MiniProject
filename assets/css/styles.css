@@ -13,10 +13,12 @@
     height: 90vh;
 }
 
-.center-vert {
-    position: absolute;
-    top: 50%;
-    transform: translate(0, -60%);
+@media (min-width: 992px) {
+    .center-vert {
+        position: absolute;
+        top: 50%;
+        transform: translate(0, -60%);
+    }
 }
 
 .hero-body-tertiary {

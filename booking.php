@@ -12,7 +12,6 @@ if (!$isLoggedIn) {
     header("Location: login?error=notLoggedIn");
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get data from the form
     $hotel_id = $hotelId;
     $duration = $_POST['duration'];
     $total_price = $_POST['total_price'];
@@ -174,49 +173,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php include 'includes/footer.html' ?>
     <?php include 'includes/js_include.html' ?>
     <script>
-        // Get references to the input fields
         const durationInput = document.getElementById("duration");
         const totalPriceInput = document.getElementById("total_price");
 
-        // Add an input event listener to the "duration" input
         durationInput.addEventListener("input", calculateTotalPrice);
 
-        // Function to calculate and update the total price
         function calculateTotalPrice() {
-            // Get the value from the "duration" input
             const durationValue = parseFloat(durationInput.value);
 
-            // Define the threshold (1.5 hours in this case)
             const threshold = 1.5;
 
-            // Use the price per hour value calculated in PHP
             const pricePerHour = <?php echo $pricePerHour; ?>;
 
-            // Check if the duration is empty
             if (isNaN(durationValue)) {
-                // If empty, clear the "total_price" input field
                 totalPriceInput.value = '';
                 return;
             }
 
-            // Check if the duration is above the threshold for ceiling
             if (durationValue >= threshold) {
-                // Ceil the duration value
                 const ceiledDuration = Math.ceil(durationValue);
-                // Calculate the total price based on the ceiled duration
                 const totalPrice = ceiledDuration * pricePerHour;
-                // Update the "duration" input with the ceiled value
                 durationInput.value = ceiledDuration;
-                // Update the "total_price" input field with the calculated total price
                 totalPriceInput.value = Math.ceil(totalPrice);
             } else {
-                // Floor the duration value
                 const flooredDuration = Math.floor(durationValue);
-                // Calculate the total price based on the floored duration
                 const totalPrice = flooredDuration * pricePerHour;
-                // Update the "duration" input with the floored value
                 durationInput.value = flooredDuration;
-                // Update the "total_price" input field with the calculated total price
                 totalPriceInput.value = Math.ceil(totalPrice);
             }
         }

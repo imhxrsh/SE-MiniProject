@@ -40,14 +40,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php include 'includes/navbar.php' ?>
     <?php if (isset($_GET["error"])) {
         if ($_GET["error"] == "notLoggedIn") {
-            echo '<div class="container col-5"><div class="alert alert-danger alert-dismissible fade show" role="alert">Please log in and then book again!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div></div>';
+            echo '<div class="container col-lg-5 col-12"><div class="alert alert-danger alert-dismissible fade show" role="alert">Please log in and then book again!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div></div>';
         }
     }
     ?>
     <div class="register d-flex container justify-content-center align-items-center">
-        <div class="d-flex row col-8 justify-content-center align-items-center">
+        <div class="d-flex row col-lg-8 col-12 justify-content-center align-items-center">
             <h1 class="text-center">Login</h1>
-            <div class="col-5">
+            <div class="col-lg-5 col-12">
                 <form action="" method="POST">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email address</label>
