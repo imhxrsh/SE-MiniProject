@@ -1,24 +1,31 @@
 <?php
 include 'conn.php';
+$error_message = "Login failed. Please check your email and password.";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
 
-    $sql = "SELECT id, email, password FROM users WHERE email = ?";
+    $sql = "SELECT id, email, password, phone, first_name, last_name FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
-    $stmt->bind_result($user_id, $db_email, $db_password);
+    $stmt->bind_result($user_id, $db_email, $db_password, $db_phone, $db_firstname, $db_lastname);
     $stmt->fetch();
 
     if (password_verify($password, $db_password)) {
         session_start();
         $_SESSION["user_id"] = $user_id;
+        $_SESSION["email"] = $db_email;
+        $_SESSION["phone"] = $db_phone;
+        $_SESSION["first_name"] = $db_firstname;
+        $_SESSION["last_name"] = $db_lastname;
+
         header("Location: /");
         exit;
     } else {
         $error_message = "Login failed. Please check your email and password.";
+        header("Location: /login.php?error=loginFailed");
     }
 
     $stmt->close();
@@ -42,6 +49,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($_GET["error"] == "notLoggedIn") {
             echo '<div class="container col-lg-5 col-12"><div class="alert alert-danger alert-dismissible fade show" role="alert">Please log in and then book again!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div></div>';
         }
+        if ($_GET["error"] == "loginFailed") {
+            echo '<div class="container col-lg-5 col-12"><div class="alert alert-danger alert-dismissible fade show" role="alert">' . $error_message . '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div></div>';
+        }
+
     }
     ?>
     <div class="register d-flex container justify-content-center align-items-center">

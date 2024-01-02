@@ -2,16 +2,17 @@
 include 'conn.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST["name"];
+    $first_name = $_POST["first_name"];
+    $last_name = $_POST["last_name"];
     $phone = $_POST["phone"];
     $email = $_POST["email"];
     $password = $_POST["password"];
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    $sql = "INSERT INTO users (name, phone, email, password) VALUES (?, ?, ?, ?)";
+    $sql = "INSERT INTO users (first_name, last_name,  phone, email, password) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssss", $name, $phone, $email, $hashedPassword);
+    $stmt->bind_param("sssss", $first_name, $last_name,  $phone, $email, $hashedPassword);
 
     if ($stmt->execute()) {
         header("Location: /login");
@@ -46,8 +47,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="col-lg-5 col-12">
                 <form action="" method="POST">
                     <div class="mb-3">
-                        <label for="name" class="form-label">Full Name<span style="color: red;">*</span></label>
-                        <input type="text" class="form-control" name="name" id="name" aria-describedby="name" required>
+                        <label for="name" class="form-label">Name<span style="color: red;">*</span></label>
+                        <input type="text" class="col mb-2 form-control" name="first_name" id="first_name" aria-describedby="first_name" placeholder="First Name" required>
+                        <input type="text" class="col mb-2 form-control" name="last_name" id="last_name" aria-describedby="last_name" placeholder="Last Name" required>
                     </div>
                     <div class="mb-3">
                         <label for="name" class="form-label">Phone<span style="color: red;">*</span></label><br>

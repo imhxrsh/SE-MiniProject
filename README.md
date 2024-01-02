@@ -44,8 +44,20 @@ Before you begin, ensure you have met the following requirements:
 3. Browse available hotel rooms and make bookings.
 4. Admins can access the admin panel to manage hotels and bookings.
 
+
+
 ## Database Schema
 To create the required database tables, use the SQL script provided in the `database.sql` file. You can import it using the MySQL command line or a tool like phpMyAdmin.
+
+## Technologies Used
+- HTML5
+- CSS3
+- JavaScript
+- jQuery
+- Bootstrap 5
+- Font Awesome
+- MySql
+
 
 ## Contributing
 Contributions are welcome! If you'd like to contribute to this project, please follow these steps:

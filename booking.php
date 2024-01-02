@@ -135,11 +135,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="fname" class="form-label">First Name:</label>
-                        <input type="text" class="form-control" id="fname" name="first_name" required>
+                        <input type="text" class="form-control" id="fname" name="first_name" value="<?php echo $_SESSION['first_name']?>" required>
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="lname" class="form-label">Last Name:</label>
-                        <input type="text" class="form-control" id="lname" name="last_name" required>
+                        <input type="text" class="form-control" id="lname" name="last_name" value="<?php echo $_SESSION['last_name']?>" required>
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="dob" class="form-label">Date of Birth:</label>
@@ -154,11 +154,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="phone" class="form-label">Phone:</label>
-                        <input type="number" class="form-control" id="phone" name="phone" required minlength="10" pattern="[1-9]{1}[0-9]{9}">
+                        <input type="number" class="form-control" id="phone" name="phone" required minlength="10" value="<?php echo $_SESSION['phone']?>" pattern="[1-9]{1}[0-9]{9}">
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="email" class="form-label">E-Mail:</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                        <input type="email" class="form-control" id="email" value="<?php echo $_SESSION['email']?>" name="email" required>
                     </div>
                 </div>
                 <div class="py-3">

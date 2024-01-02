@@ -222,3 +222,8 @@ input::-webkit-inner-spin-button {
         -ms-transform: translateY(0%);
     }
 }
+.welcome-center{
+    padding: 0;
+    margin: 0;
+    transform: translate(0, 20%);
+}
