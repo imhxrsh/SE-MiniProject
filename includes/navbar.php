@@ -30,7 +30,7 @@ if (isset($_SESSION["user_id"])) {
                 <div class="d-lg-flex col-lg-3 justify-content-lg-end">
                     <?php
                     if (isset($_SESSION["user_id"])) {
-                        echo "<p class='welcome-center'>Hi, " . $first_name . ' ' . $last_name . '</p>';
+                        echo "<p class='d-flex align-items-center welcome-center'>Hi, " . $first_name . ' ' . $last_name . '</p>';
                         echo '<a href="/logout"><button class="mx-2 btn btn-secondary">Logout</button></a>';
                     } else {
                         echo '<a href="/register"><button class="mx-2 btn btn-secondary">Register</button></a>';
