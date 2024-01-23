@@ -27,7 +27,7 @@ if (isset($_SESSION["user_id"])) {
                         <a class="nav-link" href="/listings">Hotels</a>
                     </li>
                 </ul>
-                <div class="d-flex justify-content-center col-lg-3 justify-content-lg-end">
+                <div class="d-flex justify-content-center col-lg-3 flex-lg-row flex-column align-items-center justify-content-lg-end">
                     <?php
                     if (isset($_SESSION["user_id"])) {
                         echo "<p class='d-flex align-items-center welcome-center'>Hi, " . $first_name . ' ' . $last_name . '</p>';
