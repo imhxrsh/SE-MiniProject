@@ -15,8 +15,8 @@ if (isset($_SESSION["user_id"])) {
             </button>
 
             <div class="navbar-collapse d-lg-flex collapse" id="navbar">
-                <a class="navbar-brand col-lg-3 me-0" href="/">Myriad</a>
-                <ul class="navbar-nav col-lg-6 justify-content-center">
+                <a class="navbar-brand col-lg-3 me-0 d-flex justify-content-center" href="/">Myriad</a>
+                <ul class="d-flex justify-content-center align-items-center navbar-nav col-lg-6 justify-content-center">
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="/">Home</a>
                     </li>
@@ -27,7 +27,7 @@ if (isset($_SESSION["user_id"])) {
                         <a class="nav-link" href="/listings">Hotels</a>
                     </li>
                 </ul>
-                <div class="d-lg-flex col-lg-3 justify-content-lg-end">
+                <div class="d-flex justify-content-center col-lg-3 justify-content-lg-end">
                     <?php
                     if (isset($_SESSION["user_id"])) {
                         echo "<p class='d-flex align-items-center welcome-center'>Hi, " . $first_name . ' ' . $last_name . '</p>';
