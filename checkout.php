@@ -1,4 +1,13 @@
 <?php
+
+session_start();
+
+if (isset($_SESSION["user_id"])) {
+    $isLoggedIn = true;
+} else {
+    $isLoggedIn = false;
+}
+
 include 'conn.php';
 
 $sql = "SELECT id FROM bookings ORDER BY id DESC LIMIT 1";

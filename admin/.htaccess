@@ -1,0 +1,7 @@
+RewriteEngine On
+
+RewriteRule ^bookings$ bookings.php [L]
+RewriteRule ^hotels$ hotels.php [L]
+RewriteRule ^login$ login.php [L]
+RewriteRule ^logout$ logout.php [L]
+RewriteRule ^users$ users.php [L]

@@ -1,22 +1,30 @@
 <?php
+
+include('../conn.php');
+
 session_start();
 
-if (isset($_SESSION["user_id"])) {
+if (isset($_SESSION["role"]) && $_SESSION["role"] != "admin") {
+    $_SESSION = array();
+    session_destroy();
+    header("Location: login?error=userLoggedIn");
+    exit;
+} else if (isset($_SESSION["user_id"])) {
     $isLoggedIn = true;
 } else {
     $isLoggedIn = false;
+    header("Location: login?error=notLoggedIn");
 }
-include 'conn.php';
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Myriad - Listings</title>
-    <?php include 'includes/style_include.html' ?>
+    <title>Myriad - Bookings</title>
+    <?php include '../includes/style_include.html' ?>
 </head>
 
 <body>
@@ -88,26 +96,7 @@ include 'conn.php';
         </div>
     </div>
 
-    <?php include 'includes/footer.html' ?>
-
-    <?php include 'includes/js_include.html' ?>
-    <script>
-        const searchInput = document.getElementById("searchInput");
-        const cards = document.querySelectorAll(".row.listing.m-4");
-
-        searchInput.addEventListener("input", () => {
-            const searchTerm = searchInput.value.toLowerCase();
-
-            cards.forEach(card => {
-                const cardContent = card.textContent.toLowerCase();
-                if (cardContent.includes(searchTerm)) {
-                    card.style.display = "flex";
-                } else {
-                    card.style.display = "none";
-                }
-            });
-        });
-    </script>
+    <?php include('includes/js_include.html'); ?>
 </body>
 
 </html>

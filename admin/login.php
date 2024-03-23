@@ -1,5 +1,6 @@
 <?php
-include 'conn.php';
+include '../conn.php';
+
 $error_message = "Login failed. Please check your email and password.";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -10,10 +11,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
+    $stmt->store_result(); // Store the result set for later use
     $stmt->bind_result($user_id, $db_email, $db_password, $db_phone, $db_firstname, $db_lastname, $db_role);
     $stmt->fetch();
 
-    if (password_verify($password, $db_password)) {
+    if ($stmt->num_rows > 0 && password_verify($password, $db_password)) {
         session_start();
         $_SESSION["user_id"] = $user_id;
         $_SESSION["email"] = $db_email;
@@ -22,11 +24,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["last_name"] = $db_lastname;
         $_SESSION["role"] = $db_role;
 
-        header("Location: /");
+        header("Location: /admin");
         exit;
     } else {
         $error_message = "Login failed. Please check your email and password.";
-        header("Location: /login?error=loginFailed");
+        header("Location: /admin/login?error=loginFailed");
+        exit; // Ensure to exit after header redirect
     }
 
     $stmt->close();
@@ -48,12 +51,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php include 'includes/navbar.php' ?>
     <?php if (isset($_GET["error"])) {
         if ($_GET["error"] == "notLoggedIn") {
-            echo '<div class="container col-lg-5 col-12"><div class="alert alert-danger alert-dismissible fade show" role="alert">Please log in and then book again!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div></div>';
+            echo '<div class="container col-lg-5 col-12"><div class="alert alert-danger alert-dismissible fade show" role="alert">Please log in!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div></div>';
         }
         if ($_GET["error"] == "loginFailed") {
             echo '<div class="container col-lg-5 col-12"><div class="alert alert-danger alert-dismissible fade show" role="alert">' . $error_message . '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div></div>';
         }
-
+        if ($_GET["error"] == "userLoggedIn") {
+            echo '<div class="container col-lg-5 col-12"><div class="alert alert-danger alert-dismissible fade show" role="alert">Please log in as admin!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div></div>';
+        }
     }
     ?>
     <div class="register d-flex container justify-content-center align-items-center">
@@ -69,15 +74,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" name="password" id="password">
                     </div>
-                    <p>Not a User? <a class="link" href="/register">Register Now!</a></p>
                     <center><button type="submit" class="btn bg-gradient btn-secondary">Login</button></center>
                 </form>
             </div>
         </div>
 
     </div>
-
-    <?php include 'includes/footer.html' ?>
 
     <?php include 'includes/js_include.html' ?>
 </body>
