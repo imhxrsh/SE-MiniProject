@@ -115,7 +115,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" name="password" id="password">
+                        <div class="input-group">
+                            <input type="password" class="form-control" name="password" id="password" required>
+                            <button class="btn btn-outline-secondary" type="button" id="password-toggle">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
                     </div>
                     <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
                     <p>Not a User? <a class="link" href="/register">Register Now!</a></p>
@@ -126,6 +131,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     <?php include 'includes/footer.html' ?>
     <?php include 'includes/js_include.html' ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordField = document.getElementById('password');
+            const passwordToggle = document.getElementById('password-toggle');
+
+            passwordToggle.addEventListener('click', function() {
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('bi-eye');
+                this.querySelector('i').classList.toggle('bi-eye-slash');
+            });
+        });
+    </script>
 </body>
 
 </html>
