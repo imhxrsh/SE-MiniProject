@@ -170,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="checkin_date" class="form-label">Check In Date</label>
-                        <input type="date" min="1970-01-01" max="2025-12-31" class="form-control text-center" name="checkin_date" id="checkin_date" required>
+                        <input type="date" min="<?php echo date('Y-m-d', strtotime('+1 week')); ?>" max="2025-12-31" class="form-control text-center" name="checkin_date" id="checkin_date" required>
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="checkin_time" class="form-label">Check In Time:</label>
@@ -203,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="checkout_date" class="form-label">Check Out Date</label>
-                        <input type="date" min="1970-01-01" max="2025-12-31" class="form-control text-center" name="checkout_date" id="checkout_date" readonly required>
+                        <input type="date" min="<?php echo date('Y-m-d', strtotime('+1 week')); ?>" max="2025-12-31" class="form-control text-center" name="checkout_date" id="checkout_date" readonly required>
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="checkin_time" class="form-label">Check Out Time:</label>
@@ -224,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="dob" class="form-label">Date of Birth:</label>
-                        <input type="date" min="1970-01-01" max="2025-12-31" class="form-control text-center" value="<?php echo $_SESSION['dob'] ?>" name="dob" required>
+                        <input type="date" min="1970-01-01" max="<?php echo (date('Y-m-d', strtotime('-18 years'))); ?>" class="form-control text-center" name="dob" required>
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="form-gender" class="form-label">Gender:</label>
@@ -235,7 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="phone" class="form-label">Phone:</label>
-                        <input type="number" class="form-control" id="phone" name="phone" required minlength="10" value="<?php echo $_SESSION['phone'] ?>" pattern="[1-9]{1}[0-9]{9}">
+                        <input type="number" class="form-control" id="phone" name="phone" required minlength="10" value="<?php echo $_SESSION['phone'] ?>" pattern="[0-9]{10,}" title="Please enter a valid 10-digit phone number">
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="email" class="form-label">E-Mail:</label>

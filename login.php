@@ -7,6 +7,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
 
+    $recaptcha_secret = "6LfrXqQpAAAAAJ0YMCzKDcNuguwstyVLzM3RpDm_"; // Replace with your reCAPTCHA secret key
+    $recaptcha_response = $_POST['g-recaptcha-response'];
+
+    $url = 'https://www.google.com/recaptcha/api/siteverify';
+    $data = array(
+        'secret' => $recaptcha_secret,
+        'response' => $recaptcha_response
+    );
+
+    $options = array(
+        'http' => array(
+            'method' => 'POST',
+            'content' => http_build_query($data)
+        )
+    );
+
+    $context = stream_context_create($options);
+    $verify = file_get_contents($url, false, $context);
+    $captcha_success = json_decode($verify);
+
+    if ($captcha_success->success == false || $captcha_success->score < 0.5) {
+        $error_message = "reCAPTCHA verification failed. Please try again.";
+        header("Location: /login?error=captchaFailed");
+        exit;
+    }
+
     $sql = "SELECT id, email, password, phone, first_name, last_name, role, status FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
@@ -49,6 +75,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Myriad - Login</title>
     <?php include 'includes/style_include.html' ?>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LfrXqQpAAAAALYDGzoawsbX8aTddZ9P1-H1yAuW"></script>
+    <script>
+        grecaptcha.ready(function() {
+            grecaptcha.execute('6LfrXqQpAAAAALYDGzoawsbX8aTddZ9P1-H1yAuW', {
+                action: 'login'
+            }).then(function(token) {
+                document.getElementById('g-recaptcha-response').value = token;
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -63,7 +99,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($_GET["error"] == "userDeactivated") {
             echo '<div class="container col-lg-5 col-12"><div class="alert alert-danger alert-dismissible fade show" role="alert">User deactivated. Please contact <a href="https://wa.me/919930546775" style="color: inherit;">support</a>.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div></div>';
         }
-
+        if ($_GET["error"] == "captchaFailed") {
+            echo '<div class="container col-lg-5 col-12"><div class="alert alert-danger alert-dismissible fade show" role="alert">reCAPTCHA verification failed. Please try again.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div></div>';
+        }
     }
     ?>
     <div class="register d-flex container justify-content-center align-items-center">
@@ -79,16 +117,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" name="password" id="password">
                     </div>
+                    <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
                     <p>Not a User? <a class="link" href="/register">Register Now!</a></p>
                     <center><button type="submit" class="btn bg-gradient btn-secondary">Login</button></center>
                 </form>
             </div>
         </div>
-
     </div>
-
     <?php include 'includes/footer.html' ?>
-
     <?php include 'includes/js_include.html' ?>
 </body>
 
