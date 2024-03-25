@@ -80,7 +80,7 @@ include 'config.php';
                 <input type="email" class="form-control" id="email" value="<?php echo $_SESSION['email'] ?>" name="email" required readonly>
             </div>
         </div>
-        <center><button id="pay-btn" class="my-3 btn bg-gradient btn-secondary">Proceed to Checkout</button></center>
+        <center><button id="pay-btn" class="mt-4 px-5 py-2 btn btn-outline-success"><span style="font-size: 1.3rem;">Pay</span></button></center>
     </div>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
@@ -95,17 +95,21 @@ include 'config.php';
             "handler": function(response) {
                 $.ajax({
                     type: 'POST',
-                    url: 'payment',
+                    url: 'processing',
                     data: {
                         razorpay_payment_id: response.razorpay_payment_id,
                         razorpay_order_id: response.razorpay_order_id,
                         razorpay_signature: response.razorpay_signature
                     },
                     success: function(data) {
-                        console.log('Session variables set successfully.');;
+                        console.log('Session variables set successfully.');
+                        if (data.trim() === "success") {
+                            window.location.href = "/success";
+                        } else {
+                            window.location.href = "/failed";
+                        }
                     }
                 });
-                window.location.href = "/processing";
             },
             "prefill": {
                 "name": "<?php echo $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?>",

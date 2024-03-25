@@ -224,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="dob" class="form-label">Date of Birth:</label>
-                        <input type="date" min="1970-01-01" max="2025-12-31" class="form-control text-center" name="dob" required>
+                        <input type="date" min="1970-01-01" max="2025-12-31" class="form-control text-center" value="<?php echo $_SESSION['dob'] ?>" name="dob" required>
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="form-gender" class="form-label">Gender:</label>
