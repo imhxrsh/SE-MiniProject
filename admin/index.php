@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (isset($_SESSION["role"]) && $_SESSION["role"] != "admin") {
+if (isset($_SESSION["role"]) && $_SESSION["role"] != "Admin") {
     $_SESSION = array();
     session_destroy();
     header("Location: login?error=userLoggedIn");
@@ -29,8 +29,6 @@ $sales = 0;
 while ($row = mysqli_fetch_assoc($sale)) {
     $sales += $row['total_price'];
 }
-
-$profit = $sales;
 
 ?>
 <!DOCTYPE html>
@@ -93,16 +91,6 @@ $profit = $sales;
                             <h5 class="card-title">Total Sales</h5>
                             <p class="card-text mt-2">
                             ₹ <?php echo $sales; ?>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-center col-lg-4 col-md-6 col-sm-12 col-12 p-3">
-                    <div class="card" style="height: 10rem;">
-                        <div class="card-body mt-4">
-                            <h5 class="card-title">Total Profit</h5>
-                            <p class="card-text mt-2">
-                            ₹ <?php echo $profit; ?>
                             </p>
                         </div>
                     </div>

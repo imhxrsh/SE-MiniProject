@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["first_name"] = $db_firstname;
         $_SESSION["last_name"] = $db_lastname;
         $_SESSION["role"] = $db_role;
-
+        
         header("Location: /admin");
         exit;
     } else {

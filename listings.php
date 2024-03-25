@@ -35,7 +35,7 @@ include 'conn.php';
 
             ?>
                     <div class="row listing m-4">
-                        <div class="col-lg-4 col-12" style="padding: 0;">
+                        <div class="col-lg-5 col-12" style="padding: 0;">
                             <div id="carousel<?php echo $fetch_hotels['id'];?>" class="carousel slide" data-bs-ride="carouse<?php echo $fetch_hotels['id'];?>">
                                 <div class="carousel-indicators">
                                     <button type="button" data-bs-target="#carousel<?php echo $fetch_hotels['id'];?>" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>

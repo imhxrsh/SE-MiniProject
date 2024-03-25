@@ -2,7 +2,7 @@
 include('../conn.php');
 session_start();
 
-if (isset($_SESSION["role"]) && $_SESSION["role"] != "admin") {
+if (isset($_SESSION["role"]) && $_SESSION["role"] != "Admin") {
     $_SESSION = array();
     session_destroy();
     header("Location: login?error=userLoggedIn");
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
 
             ?>
                     <div class="row listing m-4">
-                        <div class="col-lg-4 col-12" style="padding: 0;">
+                        <div class="col-lg-5 col-12" style="padding: 0;">
                             <div id="carousel<?php echo $fetch_hotels['id'];?>" class="carousel slide" data-bs-ride="carouse<?php echo $fetch_hotels['id'];?>">
                                 <div class="carousel-indicators">
                                     <button type="button" data-bs-target="#carousel<?php echo $fetch_hotels['id'];?>" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -69,13 +69,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
                                 </div>
                                 <div class="carousel-inner">
                                     <div class="carousel-item active">
-                                        <img src="<?php echo $fetch_hotels['image1'];?>" class="d-block w-100" alt="...">
+                                        <img src="<?php echo $fetch_hotels['image1'];?>" style="height: 35vh;" class="d-block w-100" alt="...">
                                     </div>
                                     <div class="carousel-item">
-                                        <img src="<?php echo $fetch_hotels['image2'];?>" class="d-block w-100" alt="...">
+                                        <img src="<?php echo $fetch_hotels['image2'];?>" style="height: 35vh;" class="d-block w-100" alt="...">
                                     </div>
                                     <div class="carousel-item">
-                                        <img src="<?php echo $fetch_hotels['image3'];?>" class="d-block w-100" alt="...">
+                                        <img src="<?php echo $fetch_hotels['image3'];?>" style="height: 35vh;" class="d-block w-100" alt="...">
                                     </div>
                                     <button class="carousel-control-prev" type="button" data-bs-target="#carousel<?php echo $fetch_hotels['id'];?>" data-bs-slide="prev">
                                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -95,9 +95,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
                                     <p class="inner-text">Location: <?php echo $fetch_hotels['location'];?></p>
                                     <p class="inner-text">Price: <?php echo round(((75+$fetch_hotels['original_price']+$fetch_hotels['taxes'])/15),2);?><span class="text-muted" style="font-size: 15px;">/hour</span></p>
                                     <p class="inner-text">Rating: <?php echo $fetch_hotels['rating'];?></p>
+                                    <p class="inner-text">Listed: <?php if ($fetch_hotels['status'] == TRUE) {
+                                                                        echo 'Yes';
+                                                                    } else {
+                                                                        echo '<span style="color: red">No</span>';
+                                                                    } ?></p>
                                 </div>
                                 <div class="col d-flex flex-column justify-content-center align-items-center">
-                                    <a href="/admin/hotels?action=list&id=<?php echo $fetch_hotels['id'];?>"><button type="button" class="btn bg-gradient btn-secondary my-2">List</button></a>
+                                    <a href="/admin/hotels?action=list&id=<?php echo $fetch_hotels['id'];?>"><button type="button" class="btn bg-gradient btn-success my-2">List</button></a>
                                     <a href="/admin/hotels?action=delist&id=<?php echo $fetch_hotels['id'];?>"><button type="button" class="btn bg-gradient btn-danger my-2">Delist</button></a>
                                 </div>
                                 

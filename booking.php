@@ -2,6 +2,12 @@
 session_start();
 $hotelId = intval($_GET['id']);
 include 'conn.php';
+
+require 'config.php';
+require 'assets/vendor/autoload.php';
+
+use Razorpay\Api\Api;
+
 if (isset($_SESSION["user_id"])) {
     $isLoggedIn = true;
 } else {
@@ -11,27 +17,57 @@ if (isset($_SESSION["user_id"])) {
 if (!$isLoggedIn) {
     header("Location: login?error=notLoggedIn");
 }
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $hotel_id = $hotelId;
     $duration = $_POST['duration'];
     $total_price = $_POST['total_price'];
+    $checkin_time = $_POST['checkin_hours'] . ':' . $_POST['checkin_minutes'] . ' ' . $_POST['checkin_meridiem'];
+    $checkout_time = $_POST['checkout_hours'] . ':' . $_POST['checkout_minutes'] . ' ' . $_POST['checkout_meridiem'];
+    $checkin_date = $_POST['checkin_date'];
+    $checkout_date = $_POST['checkout_date'];
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
     $dob = $_POST['dob'];
     $gender = $_POST['gender'];
     $phone = $_POST['phone'];
     $email = $_POST['email'];
+    
+    $payment_api = new Api($keyId, $keySecret);
 
-    $payment_status = 1;
+    $orderData = [
+        'amount'          => ($total_price*100),
+        'currency'        => 'INR'
+    ];
+    
+    $razorpayOrder = $payment_api->order->create($orderData);
 
-    $sql = "INSERT INTO bookings (hotel_id, duration, total_price, first_name, last_name, dob, gender, phone, email, payment_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO bookings (hotel_id, duration, total_price, checkin_time, checkout_time, checkin_date, checkout_date, first_name, last_name, dob, gender, phone, email, payment_status, rzp_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sql);
+    $payment_status = '0';
+    $razorpay_id = $razorpayOrder['id'];
+
 
     if ($stmt) {
-        $stmt->bind_param('idsssssssi', $hotel_id, $duration, $total_price, $first_name, $last_name, $dob, $gender, $phone, $email, $payment_status);
+        $stmt->bind_param('idsssssssssssis', $hotel_id, $duration, $total_price, $checkin_time, $checkout_time, $checkin_date, $checkout_date, $first_name, $last_name, $dob, $gender, $phone, $email, $payment_status, $razorpay_id);
 
         if ($stmt->execute()) {
+            $_SESSION['duration'] = $duration;
+            $_SESSION['total_price'] = $total_price;
+            $_SESSION['checkin_date'] = $checkin_date;
+            $_SESSION['checkin_hours'] = $_POST['checkin_hours'];
+            $_SESSION['checkin_minutes'] = $_POST['checkin_minutes'];
+            $_SESSION['checkin_meridiem'] = $_POST['checkin_meridiem'];
+            $_SESSION['checkout_date'] = $checkout_date;
+            $_SESSION['checkout_hours'] = $_POST['checkout_hours'];
+            $_SESSION['checkout_minutes'] = $_POST['checkout_minutes'];
+            $_SESSION['checkout_meridiem'] = $_POST['checkout_meridiem'];
+            $_SESSION['gender'] = $gender;
+            $_SESSION['dob'] = $dob;
+            $_SESSION['email'] = $email;
+            $_SESSION['phone'] = $phone;
+            $_SESSION['order_id'] = $razorpay_id;
             header('Location: /checkout');
         } else {
             echo "Error: " . $conn->error;
@@ -95,12 +131,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
                     </div>
-                    <div class="col px-lg-5 py-lg-5 p-2">
+                    <div class="col px-lg-5 p-2">
                         <div class="row details my-lg-5 listing-text">
                             <p class="title"><?php echo $hotel['name']; ?></h1>
                             <div class="col">
                                 <p class="inner-text">Location: <?php echo $hotel['location']; ?></p>
-                                <p class="inner-text">Price: <?php echo $pricePerHour = round(((75 + $hotel['price'] + $hotel['taxes']) / 15), 2);; ?><span class="text-muted" style="font-size: 15px;">/hour</span></p>
+                                <p class="inner-text">Price: <?php echo $pricePerHour = round(((75 + $hotel['original_price'] + $hotel['taxes']) / 15), 2);; ?><span class="text-muted" style="font-size: 15px;">/hour</span></p>
                                 <p class="inner-text">Rating: <?php echo $hotel['rating']; ?></p>
                             </div>
                         </div>
@@ -132,18 +168,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <input type="text" class="form-control" readonly id="total_price" name="total_price" required>
                         </div>
                     </div>
-
+                    <div class="col-lg-6 col-12 mt-2">
+                        <label for="checkin_date" class="form-label">Check In Date</label>
+                        <input type="date" min="1970-01-01" max="2025-12-31" class="form-control text-center" name="checkin_date" id="checkin_date" required>
+                    </div>
+                    <div class="col-lg-6 col-12 mt-2">
+                        <label for="checkin_time" class="form-label">Check In Time:</label>
+                        <div class="input-group mb-3">
+                            <select class="form-select text-center" id="checkin_hours" name="checkin_hours">
+                                <option selected disabled>Hours</option>
+                                <option value="01">1</option>
+                                <option value="02">2</option>
+                                <option value="03">3</option>
+                                <option value="04">4</option>
+                                <option value="05">5</option>
+                                <option value="06">6</option>
+                                <option value="07">7</option>
+                                <option value="08">8</option>
+                                <option value="09">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                            <select class="form-select text-center" id="checkin_minutes" name="checkin_minutes">
+                                <option selected disabled>Minutes</option>
+                                <option value="00">00</option>
+                                <option value="30">30</option>
+                            </select>
+                            <select class="form-select text-center" id="checkin_meridiem" name="checkin_meridiem">
+                                <option value="AM">AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-12 mt-2">
+                        <label for="checkout_date" class="form-label">Check Out Date</label>
+                        <input type="date" min="1970-01-01" max="2025-12-31" class="form-control text-center" name="checkout_date" id="checkout_date" readonly required>
+                    </div>
+                    <div class="col-lg-6 col-12 mt-2">
+                        <label for="checkin_time" class="form-label">Check Out Time:</label>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control text-center" readonly id="checkout_hours" name="checkout_hours" required placeholder="Hours">
+                            <input type="text" class="form-control text-center" readonly id="checkout_minutes" name="checkout_minutes" required placeholder="Minutes">
+                            <input type="text" class="form-control text-center" readonly id="checkout_meridiem" name="checkout_meridiem" required placeholder="Meridiem">
+                        </div>
+                    </div>
+                    <h3 class="mt-5">Customer Details</h3>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="fname" class="form-label">First Name:</label>
-                        <input type="text" class="form-control" id="fname" name="first_name" value="<?php echo $_SESSION['first_name']?>" required>
+                        <input type="text" class="form-control" id="fname" name="first_name" value="<?php echo $_SESSION['first_name'] ?>" required>
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="lname" class="form-label">Last Name:</label>
-                        <input type="text" class="form-control" id="lname" name="last_name" value="<?php echo $_SESSION['last_name']?>" required>
+                        <input type="text" class="form-control" id="lname" name="last_name" value="<?php echo $_SESSION['last_name'] ?>" required>
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="dob" class="form-label">Date of Birth:</label>
-                        <input type="date" min="1970-01-01" max="2025-12-31" class="form-control" name="dob" required>
+                        <input type="date" min="1970-01-01" max="2025-12-31" class="form-control text-center" name="dob" required>
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="form-gender" class="form-label">Gender:</label>
@@ -154,11 +235,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="phone" class="form-label">Phone:</label>
-                        <input type="number" class="form-control" id="phone" name="phone" required minlength="10" value="<?php echo $_SESSION['phone']?>" pattern="[1-9]{1}[0-9]{9}">
+                        <input type="number" class="form-control" id="phone" name="phone" required minlength="10" value="<?php echo $_SESSION['phone'] ?>" pattern="[1-9]{1}[0-9]{9}">
                     </div>
                     <div class="col-lg-6 col-12 mt-2">
                         <label for="email" class="form-label">E-Mail:</label>
-                        <input type="email" class="form-control" id="email" value="<?php echo $_SESSION['email']?>" name="email" required>
+                        <input type="email" class="form-control" id="email" value="<?php echo $_SESSION['email'] ?>" name="email" required>
                     </div>
                 </div>
                 <div class="py-3">
@@ -175,14 +256,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script>
         const durationInput = document.getElementById("duration");
         const totalPriceInput = document.getElementById("total_price");
+        const checkinDateInput = document.getElementById("checkin_date");
+        const checkinHoursSelect = document.getElementById("checkin_hours");
+        const checkinMinutesSelect = document.getElementById("checkin_minutes");
+        const checkinMeridiemSelect = document.getElementById("checkin_meridiem");
+        const checkoutDateInput = document.getElementById("checkout_date");
+        const checkoutHoursInput = document.getElementById("checkout_hours");
+        const checkoutMinutesInput = document.getElementById("checkout_minutes");
+        const checkoutMeridiemInput = document.getElementById("checkout_meridiem");
 
-        durationInput.addEventListener("input", calculateTotalPrice);
+        durationInput.addEventListener("input", updateTotalPriceAndCheckoutDate);
+        checkinDateInput.addEventListener("input", updateTotalPriceAndCheckoutDate);
+        checkinHoursSelect.addEventListener("change", updateCheckoutTime);
+        checkinMinutesSelect.addEventListener("change", updateCheckoutTime);
+        checkinMeridiemSelect.addEventListener("change", updateCheckoutTime);
 
-        function calculateTotalPrice() {
+        function updateTotalPriceAndCheckoutDate() {
+            updateTotalPrice();
+
+            const durationValue = parseFloat(durationInput.value);
+            const checkinDate = new Date(checkinDateInput.value);
+
+            if (!isNaN(durationValue) && !isNaN(checkinDate.getTime())) {
+                const checkoutDate = new Date(checkinDate.getTime() + durationValue * 3600 * 1000);
+                const checkoutDateString = checkoutDate.toISOString().split('T')[0];
+                checkoutDateInput.value = checkoutDateString;
+            } else {
+                checkoutDateInput.value = '';
+                checkoutHoursInput.value = '';
+                checkoutMinutesInput.value = '';
+                checkoutMeridiemInput.value = '';
+            }
+        }
+
+        function updateTotalPrice() {
             const durationValue = parseFloat(durationInput.value);
 
             const threshold = 1.5;
-
             const pricePerHour = <?php echo $pricePerHour; ?>;
 
             if (isNaN(durationValue)) {
@@ -202,10 +312,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 totalPriceInput.value = Math.ceil(totalPrice);
             }
         }
+
+        function updateCheckoutTime() {
+            const durationValue = parseFloat(durationInput.value);
+
+            const checkinHours = parseInt(checkinHoursSelect.value);
+            const checkinMinutes = parseInt(checkinMinutesSelect.value);
+            const checkinMeridiem = checkinMeridiemSelect.value;
+
+            if (isNaN(durationValue) || isNaN(checkinHours) || isNaN(checkinMinutes)) {
+                return;
+            }
+
+            let totalHours = checkinHours;
+            let totalMinutes = checkinMinutes;
+            let totalMeridiem = checkinMeridiem;
+
+            totalHours += Math.floor(durationValue);
+            totalMinutes += Math.round((durationValue % 1) * 60);
+
+            if (totalMinutes >= 60) {
+                totalHours += Math.floor(totalMinutes / 60);
+                totalMinutes %= 60;
+            }
+
+            if (totalHours >= 12) {
+                if (totalHours > 12) {
+                    totalHours %= 12;
+                }
+                totalMeridiem = totalMeridiem === "AM" ? "PM" : "AM";
+            }
+
+            checkoutHoursInput.value = totalHours.toString().padStart(2, '0');
+            checkoutMinutesInput.value = totalMinutes.toString().padStart(2, '0');
+            checkoutMeridiemInput.value = totalMeridiem;
+        }
     </script>
+
 </body>
 
 </html>
-<?php
-
-?>

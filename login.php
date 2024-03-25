@@ -1,17 +1,23 @@
 <?php
 include 'conn.php';
+
 $error_message = "Login failed. Please check your email and password.";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
 
-    $sql = "SELECT id, email, password, phone, first_name, last_name, role FROM users WHERE email = ?";
+    $sql = "SELECT id, email, password, phone, first_name, last_name, role, status FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
-    $stmt->bind_result($user_id, $db_email, $db_password, $db_phone, $db_firstname, $db_lastname, $db_role);
+    $stmt->bind_result($user_id, $db_email, $db_password, $db_phone, $db_firstname, $db_lastname, $db_role, $db_status);
     $stmt->fetch();
+
+    if ($db_status == 0) {
+        header("Location: /login?error=userDeactivated");
+        exit;
+    }
 
     if (password_verify($password, $db_password)) {
         session_start();
@@ -27,6 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $error_message = "Login failed. Please check your email and password.";
         header("Location: /login?error=loginFailed");
+        exit;
     }
 
     $stmt->close();
@@ -52,6 +59,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         if ($_GET["error"] == "loginFailed") {
             echo '<div class="container col-lg-5 col-12"><div class="alert alert-danger alert-dismissible fade show" role="alert">' . $error_message . '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div></div>';
+        }
+        if ($_GET["error"] == "userDeactivated") {
+            echo '<div class="container col-lg-5 col-12"><div class="alert alert-danger alert-dismissible fade show" role="alert">User deactivated. Please contact <a href="https://wa.me/919930546775" style="color: inherit;">support</a>.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div></div>';
         }
 
     }
