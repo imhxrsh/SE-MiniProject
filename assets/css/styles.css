@@ -6,7 +6,7 @@
 }
 
 .hero {
-    background-image: url('/assets/img/hero.gif');
+    background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=60&w=1920');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
