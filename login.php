@@ -7,12 +7,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
 
-    $recaptcha_secret = "6LfrXqQpAAAAAJ0YMCzKDcNuguwstyVLzM3RpDm_"; // Replace with your reCAPTCHA secret key
     $recaptcha_response = $_POST['g-recaptcha-response'];
 
     $url = 'https://www.google.com/recaptcha/api/siteverify';
     $data = array(
-        'secret' => $recaptcha_secret,
+        'secret' => $recaptcha_secret_key,
         'response' => $recaptcha_response
     );
 
@@ -75,10 +74,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Myriad - Login</title>
     <?php include 'includes/style_include.html' ?>
-    <script src="https://www.google.com/recaptcha/api.js?render=6LfrXqQpAAAAALYDGzoawsbX8aTddZ9P1-H1yAuW"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=<?php echo $recaptcha_site_key; ?>"></script>
     <script>
         grecaptcha.ready(function() {
-            grecaptcha.execute('6LfrXqQpAAAAALYDGzoawsbX8aTddZ9P1-H1yAuW', {
+            grecaptcha.execute('<?php echo $recaptcha_site_key; ?>', {
                 action: 'login'
             }).then(function(token) {
                 document.getElementById('g-recaptcha-response').value = token;

@@ -1,0 +1,8 @@
+<?php
+$conn = mysqli_connect('HOSTNAME','USERNAME','PASSWORD','DATABASE_NAME') or die('Connection could not be established');
+
+$recaptcha_site_key = "YOUR_RECAPTCHA_SITE_KEY";
+$recaptcha_secret_key = "YOUR_RECAPTCHA_SECRET_KEY";
+?>
+
+<!-- Recaptcha website - https://www.google.com/recaptcha/about/ -->

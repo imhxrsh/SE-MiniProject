@@ -7,11 +7,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
 
+    $recaptcha_response = $_POST['g-recaptcha-response'];
+
+    $url = 'https://www.google.com/recaptcha/api/siteverify';
+    $data = array(
+        'secret' => $recaptcha_secret_key,
+        'response' => $recaptcha_response
+    );
+
+    $options = array(
+        'http' => array(
+            'method' => 'POST',
+            'content' => http_build_query($data)
+        )
+    );
+
+    $context = stream_context_create($options);
+    $verify = file_get_contents($url, false, $context);
+    $captcha_success = json_decode($verify);
+
+    if ($captcha_success->success == false || $captcha_success->score < 0.5) {
+        $error_message = "reCAPTCHA verification failed. Please try again.";
+        header("Location: /login?error=captchaFailed");
+        exit;
+    }
+
     $sql = "SELECT id, email, password, phone, first_name, last_name, role FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
-    $stmt->store_result(); // Store the result set for later use
+    $stmt->store_result();
     $stmt->bind_result($user_id, $db_email, $db_password, $db_phone, $db_firstname, $db_lastname, $db_role);
     $stmt->fetch();
 
@@ -23,13 +48,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["first_name"] = $db_firstname;
         $_SESSION["last_name"] = $db_lastname;
         $_SESSION["role"] = $db_role;
-        
+
         header("Location: /admin");
         exit;
     } else {
         $error_message = "Login failed. Please check your email and password.";
         header("Location: /admin/login?error=loginFailed");
-        exit; // Ensure to exit after header redirect
+        exit;
     }
 
     $stmt->close();
@@ -45,6 +70,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Myriad - Login</title>
     <?php include 'includes/style_include.html' ?>
+    <script src="https://www.google.com/recaptcha/api.js?render=<?php echo $recaptcha_site_key; ?>"></script>
+    <script>
+        grecaptcha.ready(function() {
+            grecaptcha.execute('<?php echo $recaptcha_site_key; ?>', {
+                action: 'login'
+            }).then(function(token) {
+                document.getElementById('g-recaptcha-response').value = token;
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -72,8 +107,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" name="password" id="password">
+                        <div class="input-group">
+                            <input type="password" class="form-control" name="password" id="password" required>
+                            <button class="btn btn-outline-secondary" type="button" id="password-toggle">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
                     </div>
+                    <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
                     <center><button type="submit" class="btn bg-gradient btn-secondary">Login</button></center>
                 </form>
             </div>
@@ -82,6 +123,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <?php include 'includes/js_include.html' ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordField = document.getElementById('password');
+            const passwordToggle = document.getElementById('password-toggle');
+
+            passwordToggle.addEventListener('click', function() {
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('bi-eye');
+                this.querySelector('i').classList.toggle('bi-eye-slash');
+            });
+        });
+    </script>
 </body>
 
 </html>
