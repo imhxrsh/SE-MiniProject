@@ -115,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
                     </div>
                     <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
-                    <center><button type="submit" class="btn bg-gradient btn-secondary">Login</button></center>
+                    <center><button type="submit" class="btn btn-outline-light">Login</button></center>
                 </form>
             </div>
         </div>

@@ -245,7 +245,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="py-3">
                     <input class="form-check-input" id="checkbox" type="checkbox" value="" required> I confirm that the information given in this from is true, complete and accurate
                 </div>
-                <center><button type="submit" class="btn bg-gradient btn-secondary">Proceed to Checkout</button></center>
+                <center><button type="submit" class="btn btn-outline-light">Proceed to Checkout</button></center>
             </form>
         </div>
     <?php

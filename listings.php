@@ -73,7 +73,7 @@ include 'conn.php';
                                     <p class="inner-text">Rating: <?php echo $fetch_hotels['rating'];?></p>
                                 </div>
                                 <div class="col d-flex justify-content-center align-items-center">
-                                    <a href="/booking?id=<?php echo $fetch_hotels['id'];?>"><button type="button" class="btn bg-gradient btn-secondary">Book Now</button></a>
+                                    <a href="/booking?id=<?php echo $fetch_hotels['id'];?>"><button type="button" class="btn btn-outline-light">Book Now</button></a>
                                 </div>
                                 
                             </div>

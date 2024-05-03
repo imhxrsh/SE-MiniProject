@@ -32,11 +32,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    $sql = "SELECT id, email, password, phone, first_name, last_name, role, status FROM users WHERE email = ?";
+    $sql = "SELECT id, email, dob, password, phone, first_name, last_name, role, status FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
-    $stmt->bind_result($user_id, $db_email, $db_password, $db_phone, $db_firstname, $db_lastname, $db_role, $db_status);
+    $stmt->bind_result($user_id, $db_email, $db_dob, $db_password, $db_phone, $db_firstname, $db_lastname, $db_role, $db_status);
     $stmt->fetch();
 
     if ($db_status == 0) {
@@ -52,6 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["first_name"] = $db_firstname;
         $_SESSION["last_name"] = $db_lastname;
         $_SESSION["role"] = $db_role;
+        $_SESSION["dob"] = $db_dob;
 
         header("Location: /");
         exit;
@@ -123,7 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                     <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
                     <p>Not a User? <a class="link" href="/register">Register Now!</a></p>
-                    <center><button type="submit" class="btn bg-gradient btn-secondary">Login</button></center>
+                    <center><button type="submit" class="btn btn-outline-light">Login</button></center>
                 </form>
             </div>
         </div>

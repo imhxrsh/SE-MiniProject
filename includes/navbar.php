@@ -30,11 +30,12 @@ if (isset($_SESSION["user_id"])) {
                 <div class="d-flex justify-content-center col-lg-3 flex-lg-row flex-column align-items-center justify-content-lg-end">
                     <?php
                     if (isset($_SESSION["user_id"])) {
-                        echo "<p class='d-flex align-items-center welcome-center'>Hi, " . $first_name . ' ' . $last_name . '</p>';
-                        echo '<a href="/logout"><button class="mx-2 btn btn-secondary">Logout</button></a>';
+                        echo "<p class='d-flex align-items-center welcome-center'>Hi, " . $first_name . '</p>';
+                        echo '<a href="/profile"><button class="mx-2 btn btn-outline-light">Profile</button></a>';
+                        echo '<a href="/logout"><button class="mx-2 btn btn-outline-light">Logout</button></a>';
                     } else {
-                        echo '<a href="/register"><button class="mx-2 btn btn-secondary">Register</button></a>';
-                        echo '<a href="/login"><button class="mx-2 btn btn-secondary">Login</button></a>';
+                        echo '<a href="/register"><button class="mx-2 btn btn-outline-light">Register</button></a>';
+                        echo '<a href="/login"><button class="mx-2 btn btn-outline-light">Login</button></a>';
                     }
                     ?>
                 </div>

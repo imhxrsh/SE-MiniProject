@@ -34,9 +34,9 @@ if (isset($_SESSION["user_id"])) {
                     <?php
                     if (isset($_SESSION["user_id"])) {
                         echo "<p class='d-flex align-items-center welcome-center'>Hi, " . $first_name . ' ' . $last_name . '</p>';
-                        echo '<a href="/admin/logout"><button class="mx-2 btn btn-secondary">Logout</button></a>';
+                        echo '<a href="/admin/logout"><button class="mx-2 btn btn-outline-light">Logout</button></a>';
                     } else {
-                        echo '<a href="/admin/login"><button class="mx-2 btn btn-secondary">Login</button></a>';
+                        echo '<a href="/admin/login"><button class="mx-2 btn btn-outline-light">Login</button></a>';
                     }
                     ?>
                 </div>

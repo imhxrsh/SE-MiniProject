@@ -105,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <?php if (isset($error_message)) { ?>
                         <div class="alert alert-danger" role="alert"><?php echo $error_message; ?></div>
                     <?php } ?>
-                    <center><button type="submit" class="btn bg-gradient btn-secondary">Submit</button></center>
+                    <center><button type="submit" class="btn btn-outline-light">Submit</button></center>
                 </form>
             </div>
         </div>
