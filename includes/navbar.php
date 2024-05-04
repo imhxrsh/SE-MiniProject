@@ -41,7 +41,7 @@ if ($mcoins_result) {
                 <div class="d-flex justify-content-center col-lg-4 flex-lg-row flex-column align-items-center justify-content-lg-end">
                     <?php
                     if (isset($_SESSION["user_id"])) {
-                        echo "<p class='d-flex align-items-center welcome-center'>Hi, " . $first_name . '</p>';
+                        echo "<p class='d-flex align-items-center col-lg-3 welcome-center'>Hi, " . $first_name . '</p>';
                         echo '<a href="/profile"><button class="mx-2 btn btn-outline-light">Profile</button></a>';
                         echo '<a href="/logout"><button class="mx-2 btn btn-outline-light">Logout</button></a>';
                         echo '<div class="input-group"><span class="input-group-text" id="myriad-coins"><i class="bi bi-coin"></i></span><input type="text" class="form-control" placeholder="" aria-label="myriad-coins" aria-describedby="myriad-coins" disabled value="' . $mcoins . '"></div>';
