@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $options = array(
         'http' => array(
             'method' => 'POST',
+            'header' => 'Content-type: application/x-www-form-urlencoded',
             'content' => http_build_query($data)
         )
     );
@@ -25,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $context = stream_context_create($options);
     $verify = file_get_contents($url, false, $context);
     $captcha_success = json_decode($verify);
-
+    
     if ($captcha_success->success == false || $captcha_success->score < 0.5) {
         $error_message = "reCAPTCHA verification failed. Please try again.";
         header("Location: /login?error=captchaFailed");
