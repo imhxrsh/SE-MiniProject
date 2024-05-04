@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
                             <div class="card-header">Profile Picture</div>
                             <div class="d-flex justify-content-center align-items-center card-body text-center">
                                 <!-- Profile picture image-->
-                                <img class="img-account-profile rounded-circle mb-2" src="https://avatar.iran.liara.run/public" alt="">
+                                <img class="img-account-profile rounded-circle mb-2" src="https://avatar.iran.liara.run/username?username=<?php echo ($_SESSION['first_name'] . ' ' . $_SESSION['last_name']) ?>" alt="">
                             </div>
                         </div>
                     </div>

@@ -3,19 +3,19 @@ if (isset($_SESSION["user_id"])) {
     $user_id = $_SESSION["user_id"];
     $first_name = $_SESSION["first_name"];
     $last_name = $_SESSION["last_name"];
+    include('conn.php');
+    $mcoins_result = mysqli_query($conn, "SELECT `mcoins` FROM `users` WHERE `id` = '$user_id'");
+    if ($mcoins_result) {
+        // Fetching mcoins value
+        $mcoins_row = mysqli_fetch_assoc($mcoins_result);
+        $mcoins = $mcoins_row['mcoins'];
+    } else {
+        // Handle query error
+        echo "Error: " . mysqli_error($conn);
+    }
 }
 
-include('conn.php');
 
-$mcoins_result = mysqli_query($conn, "SELECT `mcoins` FROM `users` WHERE `id` = '$user_id'");
-if ($mcoins_result) {
-    // Fetching mcoins value
-    $mcoins_row = mysqli_fetch_assoc($mcoins_result);
-    $mcoins = $mcoins_row['mcoins'];
-} else {
-    // Handle query error
-    echo "Error: " . mysqli_error($conn);
-}
 ?>
 
 <div class="container">

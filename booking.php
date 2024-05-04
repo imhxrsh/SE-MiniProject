@@ -65,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['checkout_meridiem'] = $_POST['checkout_meridiem'];
             $_SESSION['gender'] = $gender;
             $_SESSION['dob'] = $dob;
+            $sql = "UPDATE users SET dob = ? WHERE email = ?";
             $_SESSION['email'] = $email;
             $_SESSION['phone'] = $phone;
             $_SESSION['order_id'] = $razorpay_id;
@@ -136,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <p class="title"><?php echo $hotel['name']; ?></h1>
                             <div class="col">
                                 <p class="inner-text">Location: <?php echo $hotel['location']; ?></p>
-                                <p class="inner-text">Price: <?php echo $pricePerHour = round(((75 + $hotel['original_price'] + $hotel['taxes']) / 15), 2);; ?><span class="text-muted" style="font-size: 15px;">/hour</span></p>
+                                <p class="inner-text">Price: <?php echo $pricePerHour = round(((75 + $hotel['original_price'] + $hotel['taxes']) / 15), 2); ?><span class="text-muted" style="font-size: 15px;">/hour</span></p>
                                 <p class="inner-text">Rating: <?php echo $hotel['rating']; ?></p>
                             </div>
                         </div>
